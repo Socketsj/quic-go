@@ -1,54 +1,11 @@
-# A QUIC implementation in pure Go
+## 背景
+ `go-micro`v2.9.1,目前最新的稳定版本，依赖了`quic-go`v0.14.1,但这个版本在go1.15编译能通过但运行会panic。使用`quic-go`v0.18.0存在一些不兼容不能编译通过，基于v0.18.0做一个兼容旧api的处理。
 
-<img src="docs/quic.png" width=303 height=124>
+## 使用
+ `go-micro` 的最新版解除对`quic-go`依赖，但还没发行一个稳定版本，等待`go-micro`发布最新稳定版本可以不再使用此库
 
-[![Godoc Reference](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/lucas-clemente/quic-go)
-[![Travis Build Status](https://img.shields.io/travis/lucas-clemente/quic-go/master.svg?style=flat-square&label=Travis+build)](https://travis-ci.org/lucas-clemente/quic-go)
-[![CircleCI Build Status](https://img.shields.io/circleci/project/github/lucas-clemente/quic-go.svg?style=flat-square&label=CircleCI+build)](https://circleci.com/gh/lucas-clemente/quic-go)
-[![Windows Build Status](https://img.shields.io/appveyor/ci/lucas-clemente/quic-go/master.svg?style=flat-square&label=windows+build)](https://ci.appveyor.com/project/lucas-clemente/quic-go/branch/master)
-[![Code Coverage](https://img.shields.io/codecov/c/github/lucas-clemente/quic-go/master.svg?style=flat-square)](https://codecov.io/gh/lucas-clemente/quic-go/)
-
-quic-go is an implementation of the [QUIC](https://en.wikipedia.org/wiki/QUIC) protocol in Go. It implements the [IETF QUIC draft-29](https://tools.ietf.org/html/draft-ietf-quic-transport-29).
-
-## Version compatibility
-
-Since quic-go is under active development, there's no guarantee that two builds of different commits are interoperable. The QUIC version used in the *master* branch is just a placeholder, and should not be considered stable.
-
-If you want to use quic-go as a library in other projects, please consider using a [tagged release](https://github.com/lucas-clemente/quic-go/releases). These releases expose [experimental QUIC versions](https://github.com/quicwg/base-drafts/wiki/QUIC-Versions), which are guaranteed to be stable.
-
-## Guides
-
-*We currently support Go 1.14+, with [Go modules](https://github.com/golang/go/wiki/Modules) support enabled.*
-
-Running tests:
-
-    go test ./...
-
-### QUIC without HTTP/3
-
-Take a look at [this echo example](example/echo/echo.go).
-
-## Usage
-
-### As a server
-
-See the [example server](example/main.go). Starting a QUIC server is very similar to the standard lib http in go:
-
-```go
-http.Handle("/", http.FileServer(http.Dir(wwwDir)))
-http3.ListenAndServeQUIC("localhost:4242", "/path/to/cert/chain.pem", "/path/to/privkey.pem", nil)
+```shell script
+ go mod edit --replace=github.com/spf13/viper=github.com/Socketsj/quic-go@latest
 ```
 
-### As a client
-
-See the [example client](example/client/main.go). Use a `http3.RoundTripper` as a `Transport` in a `http.Client`.
-
-```go
-http.Client{
-  Transport: &http3.RoundTripper{},
-}
-```
-
-## Contributing
-
-We are always happy to welcome new contributors! We have a number of self-contained issues that are suitable for first-time contributors, they are tagged with [help wanted](https://github.com/lucas-clemente/quic-go/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22). If you have any questions, please feel free to reach out by opening an issue or leaving a comment.
+[quic-go](https://github.com/lucas-clemente/quic-go)

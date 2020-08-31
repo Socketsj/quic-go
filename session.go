@@ -1276,6 +1276,11 @@ func (s *session) shutdown() {
 	<-s.ctx.Done()
 }
 
+func (s *session) Close() error {
+	s.shutdown()
+	return nil
+}
+
 func (s *session) CloseWithError(code protocol.ApplicationErrorCode, desc string) error {
 	s.closeLocal(qerr.NewApplicationError(qerr.ErrorCode(code), desc))
 	<-s.ctx.Done()

@@ -60,6 +60,9 @@ func populateConfig(config *Config) *Config {
 	if config.HandshakeTimeout != 0 {
 		handshakeTimeout = config.HandshakeTimeout
 	}
+	if config.IdleTimeout != 0 && config.MaxIdleTimeout == 0 {
+		config.MaxIdleTimeout = config.IdleTimeout
+	}
 	idleTimeout := protocol.DefaultIdleTimeout
 	if config.MaxIdleTimeout != 0 {
 		idleTimeout = config.MaxIdleTimeout

@@ -174,6 +174,8 @@ type Session interface {
 	LocalAddr() net.Addr
 	// RemoteAddr returns the address of the peer.
 	RemoteAddr() net.Addr
+	// Close the connection
+	Close() error
 	// Close the connection with an error.
 	// The error string will be sent to the peer.
 	CloseWithError(ErrorCode, string) error
@@ -221,6 +223,7 @@ type Config struct {
 	// This value only applies after the handshake has completed.
 	// If the timeout is exceeded, the connection is closed.
 	// If this value is zero, the timeout is set to 30 seconds.
+	IdleTimeout time.Duration
 	MaxIdleTimeout time.Duration
 	// AcceptToken determines if a Token is accepted.
 	// It is called with token = nil if the client didn't send a token.
