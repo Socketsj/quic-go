@@ -1,38 +1,12 @@
-// +build !go1.15,!go1.13
+// +build go1.13
 
 package qtls
-
-// This package uses unsafe to convert between:
-// * Certificate and tls.Certificate
-// * CertificateRequestInfo and tls.CertificateRequestInfo
-// * ClientHelloInfo and tls.ClientHelloInfo
-// * ConnectionState and tls.ConnectionState
-// * ClientSessionState and tls.ClientSessionState
-// We check in init() that this conversion actually is safe.
 
 import (
 	"crypto/tls"
 	"net"
 	"unsafe"
 )
-
-func init() {
-	if !structsEqual(&tls.Certificate{}, &Certificate{}) {
-		panic("Certificate not compatible with tls.Certificate")
-	}
-	if !structsEqual(&tls.CertificateRequestInfo{}, &CertificateRequestInfo{}) {
-		panic("CertificateRequestInfo not compatible with tls.CertificateRequestInfo")
-	}
-	if !structsEqual(&tls.ClientSessionState{}, &ClientSessionState{}) {
-		panic("ClientSessionState not compatible with tls.ClientSessionState")
-	}
-	if !structsEqual(&tls.ClientHelloInfo{}, &clientHelloInfo{}) {
-		panic("clientHelloInfo not compatible with tls.ClientHelloInfo")
-	}
-	if !structsEqual(&ClientHelloInfo{}, &qtlsClientHelloInfo{}) {
-		panic("qtlsClientHelloInfo not compatible with ClientHelloInfo")
-	}
-}
 
 func tlsConfigToQtlsConfig(c *tls.Config, ec *ExtraConfig) *Config {
 	if c == nil {
@@ -76,7 +50,13 @@ func tlsConfigToQtlsConfig(c *tls.Config, ec *ExtraConfig) *Config {
 			if cert == nil {
 				return nil, nil
 			}
-			return (*Certificate)(cert), nil
+			return &Certificate{
+				Certificate: cert.Certificate,
+				PrivateKey: cert.PrivateKey,
+				OCSPStaple: cert.OCSPStaple,
+				SignedCertificateTimestamps: cert.SignedCertificateTimestamps,
+				Leaf: cert.Leaf,
+			}, nil
 		}
 	}
 	var csc ClientSessionCache

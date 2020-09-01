@@ -1,4 +1,5 @@
-module github.com/lucas-clemente/quic-go
+module github.com/Socketsj/quic-go
+
 
 go 1.14
 
